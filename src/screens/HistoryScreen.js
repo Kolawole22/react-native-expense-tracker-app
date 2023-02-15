@@ -7,112 +7,156 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  ScrollView,
-  RefreshControl,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../components/header.js";
 import ButtonComponent from "../components/buttonFile.js";
 import EntryForm from "../components/textInput.js";
-import TransactionScreen from "./TransactionScreen";
-import { transaction } from "./TransactionScreen";
+//import ExpenseScreen from "./ExpenseScreen";
+//import { GlobalData } from "./ExpenseScreen";
+//import { transaction } from "./ExpenseScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+//import * as SQLite from "expo-sqlite";
+import ExpenseContext from "../../ExpenseContext";
+import { Ionicons } from "@expo/vector-icons";
+import ThemeContext from "../../ThemeContext";
+import "intl/locale-data/jsonp/en-NG.js";
 
-const HistoryScreen = () => {
+const HistoryScreen = (props) => {
   //let { data } = props.route.params;
   const [data, setData] = useState([]);
-  //var dat;
-  //const [savedData, setSavedData] = useState([]);
+  const [theme] = useContext(ThemeContext);
 
-  useEffect(() => {
-    console.log("This component has been rendered");
-    getData();
+  const [testData, setTestData] = useState([]);
+  const [expenses, setExpenses] = useContext(ExpenseContext);
 
-    //console.log("data retrieved");
-  }, []);
+  const deleteExpense = (itemId) => {
+    const newExpenses = expenses.filter((item) => item.ID !== itemId);
+    //console.log(newExpenses);
 
-  const getData = async () => {
-    try {
-      const stringifiedTransactionDetails = await AsyncStorage.getItem(
-        "transactionDetails"
-      );
-      //const empty = [];
-      // const savedData = (await AsyncStorage.getItem("historyData")) || "[]";
-      // //console.log(stringifiedTransactionDetails);
-      const dat = JSON.parse(stringifiedTransactionDetails);
-      // const hist = JSON.parse(savedData);
-      // //setData(dat);
-      // //console.log(dat);
-      // //setData([]);
-      setData(dat);
-      console.log(data);
-
-      //AsyncStorage.setItem("historyData", JSON.stringify(data));
-      //const dataToUpdate = await AsyncStorage.getItem("historyData");
-    } catch (error) {
-      console.log(error);
-    }
+    Alert.alert(
+      "Delete Item",
+      "Are you sure you want to delete this item?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          onPress: () => {
+            setExpenses(newExpenses);
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
-    <View style={styles.main}>
-      <Header />
-      <FlatList
-        alwaysBounceVertical={true}
-        data={data}
-        renderItem={(itemData) => {
-          return (
-            <View style={styles.list}>
-              <Text style={styles.listText}>
-                Date: {itemData.item.Day}, {itemData.item.DayNo},{" "}
-                {itemData.item.Month}
-              </Text>
-              <Text style={styles.listText}>
-                Amount: {itemData.item.Amount}
-              </Text>
-              <Text style={styles.listText}>
-                Category: {itemData.item.Category}
-              </Text>
-              <Text style={styles.listText}>
-                Description: {itemData.item.Description}
-              </Text>
-            </View>
-          );
-        }}
-        keyExtractor={(item, index) => {
-          return item.id;
-        }}
-        alwaysBounceVertical={true}
-      />
+    <View style={styles(theme).main}>
+      <Header title="Expenses" />
+      {expenses !== null ? (
+        <FlatList
+          //style={{ backgroundColor: theme.background }}
+          alwaysBounceVertical={true}
+          data={expenses}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles(theme).list}>
+                <Text style={styles(theme).listText}>
+                  Date: {itemData.item.Day}, {itemData.item.DayNo},{" "}
+                  {itemData.item.Month}, {itemData.item.Year}
+                </Text>
+                <Text style={styles(theme).listText}>
+                  Amount:{" "}
+                  {new Intl.NumberFormat("en-NG", {
+                    style: "currency",
+                    currency: "NGN",
+                  }).format(itemData.item.Amount)}
+                </Text>
+                <Text style={styles(theme).listText}>
+                  Category: {itemData.item.Category}
+                </Text>
+                <View
+                  style={{ flexDirection: "row", alignItems: "flex-start" }}
+                >
+                  <View style={{ flex: 10 }}>
+                    <Text style={styles(theme).listText}>
+                      Description: {itemData.item.Description}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => deleteExpense(itemData.item.ID)}
+                    style={{ flex: 1 }}
+                  >
+                    <Ionicons name="ios-trash" size={20} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return item.ID;
+          }}
+          alwaysBounceVertical={true}
+        />
+      ) : (
+        <View
+          style={{
+            marginVertical: -18,
+            paddingVertical: 320,
+            backgroundColor: theme.background,
+            //flex: ,
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                justifyContent: "center",
+                //marginTop: 240,
+                color: theme.text,
+              }}
+            >
+              No expenses made yet
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 export default HistoryScreen;
 
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    backgroundColor: "#EFDFEC",
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-  },
-  list: {
-    marginVertical: 8,
-    backgroundColor: "#EFBCED",
-    marginHorizontal: 8,
-    paddingVertical: 8,
-    alignItems: "flex-start",
-    flex: 0.8,
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 6,
-    //flexDirection: "column",
-  },
-  listText: {
-    color: "black",
-    fontSize: 12,
-    justifyContent: "center",
-    borderRadius: 32,
-    marginLeft: 16,
-  },
-});
+const styles = (theme) =>
+  StyleSheet.create({
+    main: {
+      flex: 1,
+      backgroundColor: theme.background,
+      marginTop: 24,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    list: {
+      marginVertical: 8,
+      backgroundColor: theme.primary,
+      marginHorizontal: 16,
+      paddingVertical: 8,
+      alignItems: "flex-start",
+      //flex: 0.8,
+      borderWidth: 2,
+      borderColor: theme.tetiary,
+      borderRadius: 6,
+      //flexDirection: "column",
+    },
+    listText: {
+      color: theme.textSecondary,
+      fontSize: 12,
+      justifyContent: "center",
+      borderRadius: 32,
+      marginLeft: 16,
+    },
+  });

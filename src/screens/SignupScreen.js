@@ -2,6 +2,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   TextInput,
   Button,
   Image,
@@ -11,13 +12,15 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import EntryForm from "../components/textInput.js";
 import Header from "../components/header.js";
 import ButtonComponent from "../components/buttonFile.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ThemeContext from "../../ThemeContext";
+import UserDataContext from "../../userDataContext";
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation, props }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,15 +29,17 @@ const SignupScreen = ({ navigation }) => {
   const [accountBalance, setAccountBalance] = useState("");
   const [loading, setLoading] = useState("");
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
+  const [theme] = useContext(ThemeContext);
+  const [userData, setUserData] = useContext(UserDataContext);
 
   function nameInputHandler(enteredText) {
     setName(enteredText);
-    console.log(enteredText);
+    //console.log(enteredText);
   }
 
   function emailInputHandler(enteredText) {
     setEmail(enteredText);
-    console.log(enteredText);
+    //console.log(enteredText);
   }
 
   function passwordInputHandler(enteredText) {
@@ -53,13 +58,14 @@ const SignupScreen = ({ navigation }) => {
     setAccountBalance(enteredText);
   }
 
-  const handleSubmitButton = () => {
+  const handleSubmitButton = async () => {
     if (!email) {
       Alert.alert("Warning!", "Please enter your Email");
       return;
     }
     if (!name) {
       Alert.alert("Warning!", "Please enter your Name");
+      return;
     }
     if (!password) {
       Alert.alert("Warning!", "Please enter your Password");
@@ -79,15 +85,21 @@ const SignupScreen = ({ navigation }) => {
     }
     {
       try {
-        var rawUserDetails = {
+        const rawUserDetails = {
           Name: name,
           Password: password,
           Email: email,
           Age: age,
           AccountBalance: accountBalance,
         };
+        setUserData(rawUserDetails);
+        //console.log(userData);
+
         var userDetails = JSON.stringify(rawUserDetails);
-        AsyncStorage.setItem("userDetails", userDetails);
+        //console.log(userDetails);
+        await AsyncStorage.setItem("userDetails", userDetails);
+        //const storedUserDetails = await AsyncStorage.getItem("userDetails");
+        //setUserData(JSON.parse(storedUserDetails));
         navigation.navigate("Login");
       } catch (error) {
         console.log(error);
@@ -96,60 +108,45 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.main}>
+    <ScrollView style={styles(theme).main}>
       <Header title="Sign up" />
-      <KeyboardAvoidingView>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={require("./images/signin.png")} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text>Email</Text>
-        </View>
+      <View>
         <EntryForm
           placeholder="user@gmail.com"
           keyboardType="email-address"
           onChangeText={emailInputHandler}
+          label="Email"
         />
-        <View style={styles.textContainer}>
-          <Text>Full Name</Text>
-        </View>
         <EntryForm
           onChangeText={nameInputHandler}
           placeholder="e.g Iwalewa Kolawole"
+          label="Name"
         />
-        <View style={styles.textContainer}>
-          <Text>Age</Text>
-        </View>
         <EntryForm
           onChangeText={ageInputHandler}
           placeholder="Enter your age"
           keyboardType="numeric"
+          label="Age"
         />
-        <View style={styles.textContainer}>
-          <Text>Budget</Text>
-        </View>
         <EntryForm
           onChangeText={accountBalanceInputHandler}
           placeholder="You can edit it later"
           keyboardType="numeric"
+          label="Budget"
         />
-        <View style={styles.textContainer}>
-          <Text>Password</Text>
-        </View>
         <EntryForm
           placeholder="8 characters or more"
           keyboardType="password"
           secureTextEntry={true}
           onChangeText={passwordInputHandler}
+          label="Password"
         />
-        <View style={styles.textContainer}>
-          <Text>Confirm Password</Text>
-        </View>
         <EntryForm
           placeholder="Enter your password again"
           keyboardType="password"
           secureTextEntry={true}
           onChangeText={secondPasswordInputHandler}
+          label="Confirm Password"
         />
         <ButtonComponent title="Sign up" onPress={handleSubmitButton} />
         <View
@@ -159,46 +156,48 @@ const SignupScreen = ({ navigation }) => {
             justifyContent: "center",
           }}
         ></View>
-      </KeyboardAvoidingView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 export default SignupScreen;
 
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    backgroundColor: "#efdfec",
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-  },
-  headerContainer: {
-    flex: 0.2,
-    marginTop: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    color: "black",
-    fontSize: 16,
-  },
-  imageContainer: {
-    flex: 0.3,
-    marginTop: 8,
-    marginBottom: 64,
-    alignItems: "center",
-  },
-  image: {
-    marginTop: 16,
-    width: "100%",
-    height: "60%",
-    resizeMode: "contain",
-  },
-  textContainer: {
-    justifyContent: "center",
-    marginLeft: 8,
-  },
-  text: {
-    fontSize: 8,
-  },
-});
+const styles = (theme) =>
+  StyleSheet.create({
+    main: {
+      flex: 1,
+      backgroundColor: theme.background,
+      paddingVertical: 16,
+      paddingHorizontal: 16,
+    },
+    headerContainer: {
+      flex: 20,
+      marginTop: 16,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    header: {
+      color: theme.text,
+      fontSize: 16,
+    },
+    imageContainer: {
+      flex: 0.3,
+      marginTop: 8,
+      marginBottom: 64,
+      alignItems: "center",
+    },
+    image: {
+      marginTop: 16,
+      width: "100%",
+      height: "60%",
+      resizeMode: "contain",
+    },
+    textContainer: {
+      justifyContent: "center",
+      marginLeft: 8,
+    },
+    text: {
+      fontSize: 8,
+      color: theme.text,
+    },
+  });

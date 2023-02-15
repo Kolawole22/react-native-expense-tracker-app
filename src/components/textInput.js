@@ -1,28 +1,45 @@
-import {
-  StyleSheet,
-  View,
-  Button,
-  TextInput,
-  KeyboardAvoidingView,
-} from "react-native";
+import { StyleSheet, View, Button, KeyboardAvoidingView } from "react-native";
 import React from "react";
+import { TextInput } from "react-native-paper";
 
 export default function EntryForm({
   placeholder,
   secureTextEntry,
-  KeyboardType,
+  keyboardType,
   onChangeText,
   multiline,
+  value,
+  label,
+  autoCorrect,
+  numeric,
+  email,
+  maxLength,
 }) {
   return (
-    <KeyboardAvoidingView enabled style={styles.inputContainer}>
+    <KeyboardAvoidingView
+      enabled
+      style={styles.inputContainer}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      //keyboardVerticalOffset={20} // Adjust the offset as needed
+      //style={{ marginBottom: 32 }}
+    >
       <TextInput
-        style={styles.input}
+        style={{ marginVertical: 12 }}
+        outlineStyle={{ borderRadius: 8 }}
+        label={label}
+        floating={false}
+        mode="outlined"
         placeholder={placeholder}
+        style={styles.input}
+        value={value}
         secureTextEntry={secureTextEntry}
-        KeyboardType={KeyboardType}
+        keyboardType={keyboardType}
         onChangeText={onChangeText}
+        autoCorrect={autoCorrect}
         multiline={multiline}
+        numeric={numeric}
+        email={email}
+        maxLength={maxLength}
       />
     </KeyboardAvoidingView>
   );
@@ -37,10 +54,10 @@ const styles = StyleSheet.create({
   input: {
     color: "black",
     fontSize: 16,
-    borderWidth: 2,
-    borderColor: "black",
+    //borderWidth: 2,
+    //borderColor: "black",
     width: "95%",
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 16,
   },
 });
