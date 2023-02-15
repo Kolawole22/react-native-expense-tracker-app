@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native";
 //import AnimatedLoader from "react-native-animated-loader";
 
-const WelcomeScreen = ({ navigation }) => {
+const SplashScreen = ({ navigation }) => {
   const [animating, setAnimating] = useState(true);
 
   useEffect(() => {
@@ -34,12 +34,12 @@ const WelcomeScreen = ({ navigation }) => {
     </View>
   );
 };
-export default WelcomeScreen;
+export default SplashScreen;
 
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: "#EFDFEC",
+    backgroundColor: "#ffffff",
     paddingVertical: 16,
     paddingHorizontal: 16,
   },

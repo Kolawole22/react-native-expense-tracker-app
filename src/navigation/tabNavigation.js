@@ -1,45 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import CashScreen from "../screens/CashScreen";
-import TransactionScreen from "../screens/TransactionScreen";
+import BalanceScreen from "../screens/BalanceScreen";
+import ExpenseScreen from "../screens/ExpenseScreen";
 import HistoryScreen from "../screens/HistoryScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import ThemeContext from "../../ThemeContext";
 
 //const Tab = createBottomTabNavigator();
-const Tabs = () => {
+const Tabs = (props) => {
+  const [theme] = useContext(ThemeContext);
+  //console.log(theme);
+  const col = theme.secondary;
+  const tabBackground = theme.primary;
+  const tabIcon = theme.tab;
+  const tabIconFocused = theme.tabFocused;
+  //console.log("col:", col);
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
-          backgroundColor: "#320a2b",
+          backgroundColor: tabBackground,
           tabBarHideOnKeyboard: true,
+          backBehavior: "firstRoute",
         },
       }}
     >
       <Tab.Screen
-        name="Cash"
-        component={CashScreen}
-        options={{
-          headerShown: false,
-          tabBarLabel: "Home",
-          tabBarOptions: {
-            activeTintColor: "darkpurple",
-          },
-          tabBarIcon: (tabInfo) => {
-            return (
-              <Ionicons
-                name="md-home"
-                size={24}
-                color={tabInfo.focused ? "#d872c4" : "#df9bd2"}
-              />
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Transaction"
-        component={TransactionScreen}
+        name="Expense"
+        component={ExpenseScreen}
         options={{
           headerShown: false,
           tabBarLabel: "Add Expense",
@@ -51,7 +42,27 @@ const Tabs = () => {
               <Ionicons
                 name="pricetag"
                 size={24}
-                color={tabInfo.focused ? "#d872c4" : "#df9bd2"}
+                color={tabInfo.focused ? tabIconFocused : tabIcon}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Balance"
+        component={BalanceScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: "Balance",
+          tabBarOptions: {
+            activeTintColor: "darkpurple",
+          },
+          tabBarIcon: (tabInfo) => {
+            return (
+              <Ionicons
+                name="ios-card"
+                size={24}
+                color={tabInfo.focused ? tabIconFocused : tabIcon}
               />
             );
           },
@@ -69,9 +80,29 @@ const Tabs = () => {
           tabBarIcon: (tabInfo) => {
             return (
               <Ionicons
-                name="calendar-sharp"
+                name="ios-list"
                 size={24}
-                color={tabInfo.focused ? "#d872c4" : "#df9bd2"}
+                color={tabInfo.focused ? tabIconFocused : tabIcon}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: "Settings",
+          tabBarOptions: {
+            activeTintColor: "darkpurple",
+          },
+          tabBarIcon: (tabInfo) => {
+            return (
+              <Ionicons
+                name="ios-cog"
+                size={24}
+                color={tabInfo.focused ? tabIconFocused : tabIcon}
               />
             );
           },
