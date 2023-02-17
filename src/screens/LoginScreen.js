@@ -9,6 +9,8 @@ import {
   Pressable,
   Alert,
   ImageBackground,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
 import { useState, useEffect, useContext } from "react";
@@ -57,15 +59,11 @@ const LoginScreen = ({ navigation, props }) => {
   }
 
   const handleSubmitPress = () => {
-    if (email === storedEmail && password === storedPassword) {
+    if (password === storedPassword) {
       //setEmail("");
       setPassword("");
       //inputRef.current.blur();
       navigation.navigate("Tabs");
-      return;
-    }
-    if (!email) {
-      Alert.alert("Warning!", "Please enter your Email");
       return;
     }
     if (!password) {
@@ -78,7 +76,8 @@ const LoginScreen = ({ navigation, props }) => {
   };
 
   return (
-    <View style={styles(theme).main}>
+    <SafeAreaView style={styles(theme).main}>
+      <StatusBar backgroundColor={theme.primary} />
       <Header title="Log in" />
       <ImageBackground>
         <View style={styles(theme).imageContainer}>
@@ -87,13 +86,7 @@ const LoginScreen = ({ navigation, props }) => {
             source={require("./images/signin.png")}
           />
         </View>
-        <EntryForm
-          placeholder="user@gmail.com"
-          keyboardType="email-address"
-          onChangeText={emailInputHandler}
-          label="Email"
-          //onBlur={setEmail(email)}
-        />
+
         <EntryForm
           placeholder="Enter your Password"
           keyboardType="password"
@@ -133,7 +126,7 @@ const LoginScreen = ({ navigation, props }) => {
           </Pressable>
         </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 };
 export default LoginScreen;
@@ -143,9 +136,10 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingVertical: 16,
+      // paddingVertical: 16,
       paddingHorizontal: 16,
     },
+
     headerContainer: {
       flex: 0.2,
       marginTop: 16,

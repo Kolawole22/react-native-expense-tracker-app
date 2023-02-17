@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import Header from "../components/header.js";
@@ -51,62 +53,65 @@ const BalanceScreen = ({ props }) => {
 
   if (expenses.length <= 0) {
     return (
-      <View style={styles(theme).main}>
-        <Header title="Wallet" style={styles(theme).text} />
-        <View style={styles(theme).container}>
-          <View style={{ alignItems: "center" }}>
-            <Ionicons name="ios-wallet" size={100} color={theme.button} />
-          </View>
-          <View
-            style={{
-              marginVertical: 16,
-              borderRadius: 12,
-              backgroundColor: theme.tab,
-              width: "70%",
-              paddingHorizontal: 8,
-              paddingVertical: 16,
-              alignItems: "center",
-            }}
-          >
-            <Text style={styles(theme).text}>{userData.Name}</Text>
-          </View>
-          <View
-            style={{
-              marginVertical: 16,
-              alignItems: "center",
-              borderRadius: 12,
-              backgroundColor: theme.tab,
-              width: "70%",
-              paddingHorizontal: 8,
-              paddingVertical: 6,
-            }}
-          >
-            <Text style={styles(theme).text}>Balance</Text>
-            <Text style={styles(theme).amount}>
-              {new Intl.NumberFormat("en-NG", {
-                style: "currency",
-                currency: "NGN",
-                currencyDisplay: "symbol",
-              }).format(userData.AccountBalance)}
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              backgroundColor: theme.tab,
-              borderRadius: 12,
-              paddingHorizontal: 8,
-              paddingVertical: 6,
-            }}
-          >
-            <Text style={styles(theme).text}>Total Amount Spent</Text>
-            <Text style={styles(theme).amount}>
-              {new Intl.NumberFormat("en-NG", {
-                style: "currency",
-                currency: "NGN",
-                currencyDisplay: "symbol",
-              }).format(Number(0))}
-            </Text>
+      <View style={{ flex: 1 }}>
+        <StatusBar style={styles.statusBar} />
+        <View style={styles(theme).main}>
+          <Header title="Wallet" style={styles(theme).text} />
+          <View style={styles(theme).container}>
+            <View style={{ alignItems: "center" }}>
+              <Ionicons name="ios-wallet" size={100} color={theme.button} />
+            </View>
+            <View
+              style={{
+                marginVertical: 16,
+                borderRadius: 12,
+                backgroundColor: theme.tab,
+                width: "70%",
+                paddingHorizontal: 8,
+                paddingVertical: 16,
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles(theme).text}>{userData.Name}</Text>
+            </View>
+            <View
+              style={{
+                marginVertical: 16,
+                alignItems: "center",
+                borderRadius: 12,
+                backgroundColor: theme.tab,
+                width: "70%",
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+              }}
+            >
+              <Text style={styles(theme).text}>Balance</Text>
+              <Text style={styles(theme).amount}>
+                {new Intl.NumberFormat("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                  currencyDisplay: "symbol",
+                }).format(userData.AccountBalance)}
+              </Text>
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                backgroundColor: theme.tab,
+                borderRadius: 12,
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+              }}
+            >
+              <Text style={styles(theme).text}>Total Amount Spent</Text>
+              <Text style={styles(theme).amount}>
+                {new Intl.NumberFormat("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                  currencyDisplay: "symbol",
+                }).format(Number(0))}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -128,7 +133,8 @@ const BalanceScreen = ({ props }) => {
     const highestAmount = categorySums[highestCategory];
 
     return (
-      <View style={styles(theme).main}>
+      <SafeAreaView style={styles(theme).main}>
+        <StatusBar backgroundColor={theme.primary} />
         <Header title="Wallet" style={styles(theme).text} />
         <View style={styles(theme).container}>
           <View style={{ alignItems: "center" }}>
@@ -211,7 +217,7 @@ const BalanceScreen = ({ props }) => {
             <Text style={styles(theme).text}>on {highestCategory}</Text>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 };
@@ -222,10 +228,11 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingVertical: 8,
+      // paddingVertical: 8,
       paddingHorizontal: 8,
-      marginTop: 24,
+      //marginTop: 24,
     },
+
     container: {
       marginTop: 10,
       alignItems: "center",

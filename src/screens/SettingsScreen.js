@@ -6,6 +6,9 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  StatusBar,
+  SafeAreaView,
+  Alert,
 } from "react-native";
 import { Text } from "react-native-paper";
 //import { useTheme } from "react-native-paper";
@@ -35,7 +38,8 @@ const SettingsScreen = ({ props, navigation }) => {
   //   });
 
   const toggleTheme = () => {
-    //console.log(theme);
+    console.log(theme);
+
     //const newTheme = theme === lightTheme ? darkTheme : lightTheme;
     setTheme((newTheme) => (newTheme === lightTheme ? darkTheme : lightTheme));
     //await AsyncStorage.setItem("theme", newTheme);
@@ -52,17 +56,69 @@ const SettingsScreen = ({ props, navigation }) => {
   };
 
   const clearData = () => {
-    AsyncStorage.removeItem("expenses")
-      .then(() => {
-        console.log("Expenses data cleared from AsyncStorage");
-      })
-      .catch((error) => {
-        console.error("Error clearing expenses data from AsyncStorage", error);
-      });
+    Alert.alert(
+      "Clear expenses",
+      "Are you sure you want to clear your expenses?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Clear",
+          onPress: () => {
+            AsyncStorage.removeItem("expenses")
+              .then(() => {
+                Alert.alert(
+                  "Expenses cleared",
+                  "restart your app to reflect changes"
+                );
+                console.log("Expenses data cleared from AsyncStorage");
+              })
+              .catch((error) => {
+                console.error(
+                  "Error clearing expenses data from AsyncStorage",
+                  error
+                );
+              });
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const deleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete account",
+          onPress: () => {
+            AsyncStorage.removeItem("expenses").then(() => {
+              console.log("expenses cleared");
+            });
+            AsyncStorage.removeItem("userData")
+              .then(() => {
+                console.log("User data cleared from AsyncStorage");
+                navigation.navigate("Login");
+                Alert.alert("Account deleted", "Your account has been deleted");
+              })
+              .catch((error) => {
+                console.error(
+                  "Error clearing expenses data from AsyncStorage",
+                  error
+                );
+              });
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
-    <View style={styles(theme).main}>
+    <SafeAreaView style={styles(theme).main}>
+      <StatusBar backgroundColor={theme.primary} />
       <Header />
       <View>
         <TouchableOpacity
@@ -115,6 +171,7 @@ const SettingsScreen = ({ props, navigation }) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
+          onPress={deleteAccount}
           style={{
             marginVertical: 16,
             borderWidth: 1,
@@ -149,7 +206,7 @@ const SettingsScreen = ({ props, navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 export default SettingsScreen;
@@ -159,10 +216,10 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingVertical: 16,
-      paddingHorizontal: 16,
+      // paddingVertical: 16,
+      // paddingHorizontal: 16,
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 24,
+      //marginTop: 24,
     },
   });

@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import Header from "../components/header.js";
@@ -52,7 +54,8 @@ const HistoryScreen = (props) => {
   };
 
   return (
-    <View style={styles(theme).main}>
+    <SafeAreaView style={styles(theme).main}>
+      <StatusBar backgroundColor={theme.primary} />
       <Header title="Expenses" />
       {expenses !== null ? (
         <FlatList
@@ -126,7 +129,7 @@ const HistoryScreen = (props) => {
           </View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 export default HistoryScreen;
@@ -136,9 +139,9 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      marginTop: 24,
+      // marginTop: 24,
       paddingHorizontal: 16,
-      paddingVertical: 16,
+      // paddingVertical: 16,
     },
     list: {
       marginVertical: 8,
