@@ -10,6 +10,8 @@ import {
   Pressable,
   Alert,
   KeyboardAvoidingView,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
 import { useState, useEffect, useContext } from "react";
@@ -19,6 +21,7 @@ import ButtonComponent from "../components/buttonFile.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ThemeContext from "../../ThemeContext";
 import UserDataContext from "../../userDataContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignupScreen = ({ navigation, props }) => {
   const [name, setName] = useState("");
@@ -59,10 +62,6 @@ const SignupScreen = ({ navigation, props }) => {
   }
 
   const handleSubmitButton = async () => {
-    if (!email) {
-      Alert.alert("Warning!", "Please enter your Email");
-      return;
-    }
     if (!name) {
       Alert.alert("Warning!", "Please enter your Name");
       return;
@@ -88,7 +87,6 @@ const SignupScreen = ({ navigation, props }) => {
         const rawUserDetails = {
           Name: name,
           Password: password,
-          Email: email,
           Age: age,
           AccountBalance: accountBalance,
         };
@@ -109,54 +107,54 @@ const SignupScreen = ({ navigation, props }) => {
 
   return (
     <ScrollView style={styles(theme).main}>
-      <Header title="Sign up" />
-      <View>
-        <EntryForm
-          placeholder="user@gmail.com"
-          keyboardType="email-address"
-          onChangeText={emailInputHandler}
-          label="Email"
-        />
-        <EntryForm
-          onChangeText={nameInputHandler}
-          placeholder="e.g Iwalewa Kolawole"
-          label="Name"
-        />
-        <EntryForm
-          onChangeText={ageInputHandler}
-          placeholder="Enter your age"
-          keyboardType="numeric"
-          label="Age"
-        />
-        <EntryForm
-          onChangeText={accountBalanceInputHandler}
-          placeholder="You can edit it later"
-          keyboardType="numeric"
-          label="Budget"
-        />
-        <EntryForm
-          placeholder="8 characters or more"
-          keyboardType="password"
-          secureTextEntry={true}
-          onChangeText={passwordInputHandler}
-          label="Password"
-        />
-        <EntryForm
-          placeholder="Enter your password again"
-          keyboardType="password"
-          secureTextEntry={true}
-          onChangeText={secondPasswordInputHandler}
-          label="Confirm Password"
-        />
-        <ButtonComponent title="Sign up" onPress={handleSubmitButton} />
-        <View
-          style={{
-            marginTop: 64,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        ></View>
-      </View>
+      <SafeAreaView>
+        <StatusBar backgroundColor={theme.primary} />
+        <Header title="Sign up" />
+        <View style={styles(theme).logoContainer}>
+          <Ionicons name="ios-person-add" size={64} color={theme.button} />
+        </View>
+        <View>
+          <EntryForm
+            onChangeText={nameInputHandler}
+            placeholder="e.g Iwalewa Kolawole"
+            label="Name"
+          />
+          <EntryForm
+            onChangeText={ageInputHandler}
+            placeholder="Enter your age"
+            keyboardType="numeric"
+            label="Age"
+          />
+          <EntryForm
+            onChangeText={accountBalanceInputHandler}
+            placeholder="You can edit it later"
+            keyboardType="numeric"
+            label="Budget"
+          />
+          <EntryForm
+            placeholder="8 characters or more"
+            keyboardType="password"
+            secureTextEntry={true}
+            onChangeText={passwordInputHandler}
+            label="Password"
+          />
+          <EntryForm
+            placeholder="Enter your password again"
+            keyboardType="password"
+            secureTextEntry={true}
+            onChangeText={secondPasswordInputHandler}
+            label="Confirm Password"
+          />
+          <ButtonComponent title="Sign up" onPress={handleSubmitButton} />
+          <View
+            style={{
+              marginTop: 64,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          ></View>
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -167,9 +165,15 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingVertical: 16,
+      //   paddingVertical: 16,
       paddingHorizontal: 16,
     },
+    logoContainer: {
+      //flex: 0.4,
+      marginTop: 8,
+      alignItems: "center",
+    },
+
     headerContainer: {
       flex: 20,
       marginTop: 16,

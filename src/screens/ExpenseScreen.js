@@ -12,6 +12,8 @@ import {
   ImageBackground,
   Platform,
   ScrollView,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/header.js";
@@ -134,6 +136,7 @@ const ExpenseScreen = ({ navigation, props }) => {
 
       //console.log("expenses:", expenses);
       AsyncStorage.setItem("expenses", JSON.stringify(expenses));
+      Alert.alert("SUCCESSFUL", "expense added successfully");
       setExpense("data saved");
       //console.log("data saved");
       //setDummyData("data added");
@@ -143,54 +146,57 @@ const ExpenseScreen = ({ navigation, props }) => {
 
   return (
     <ScrollView style={styles(theme).main}>
-      <Header title="New Expense" />
-      <View style={styles(theme).logoContainer}>
-        <Ionicons name="ios-wallet" size={64} color="#3f51b5" />
-      </View>
-      <View style={{ marginTop: 64, marginLeft: 8 }}>
-        <EntryForm
-          placeholder="Enter Amount"
-          onChangeText={amountInputHandler}
-          label="Amount"
-          keyboardType="numeric"
-          numeric={true}
-          //value="Amount"
-        />
-        <View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 32,
-              justifyContent: "center",
-              marginLeft: 8,
-              marginRight: -6,
-              paddingVertical: 4,
-            }}
-          >
-            <DropDownPicker
-              style={styles(theme).input}
-              placeholder="Category"
-              open={open}
-              value={value}
-              items={category}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setCategory}
-              dropDownStyle={{ backgroundColor: "pink" }}
-            />
-          </View>
-
-          <EntryForm
-            //style={styles.input}
-            placeholder="Enter Description"
-            multiline={true}
-            maxLength={30}
-            label="Description"
-            onChangeText={descriptionInputHandler}
-          />
-          <ButtonComponent title="Add Expense" onPress={handleAddExpense} />
+      <SafeAreaView>
+        <StatusBar backgroundColor={theme.primary} />
+        <Header title="New Expense" />
+        <View style={styles(theme).logoContainer}>
+          <Ionicons name="ios-wallet" size={64} color={theme.button} />
         </View>
-      </View>
+        <View style={{ marginTop: 64, marginLeft: 8 }}>
+          <EntryForm
+            placeholder="Enter Amount"
+            onChangeText={amountInputHandler}
+            label="Amount"
+            keyboardType="numeric"
+            numeric={true}
+            //value="Amount"
+          />
+          <View>
+            <View
+              style={{
+                alignItems: "center",
+                marginBottom: 32,
+                justifyContent: "center",
+                marginLeft: 8,
+                marginRight: -6,
+                paddingVertical: 4,
+              }}
+            >
+              <DropDownPicker
+                style={styles(theme).input}
+                placeholder="Category"
+                open={open}
+                value={value}
+                items={category}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setCategory}
+                dropDownStyle={{ backgroundColor: "pink" }}
+              />
+            </View>
+
+            <EntryForm
+              //style={styles.input}
+              placeholder="Enter Description"
+              multiline={true}
+              maxLength={30}
+              label="Description"
+              onChangeText={descriptionInputHandler}
+            />
+            <ButtonComponent title="Add Expense" onPress={handleAddExpense} />
+          </View>
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -201,10 +207,11 @@ const styles = (theme) =>
     main: {
       flex: 1,
       backgroundColor: theme.background,
-      paddingVertical: 16,
+      // paddingVertical: 16,
       paddingHorizontal: 16,
-      marginTop: 24,
+      // marginTop: 24,
     },
+
     image: {
       marginTop: 16,
       width: "100%",

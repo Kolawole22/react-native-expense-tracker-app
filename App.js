@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import WelcomeScreen from "./src/screens/WelcomeScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import SignupScreen from "./src/screens/SignupScreen";
-import SplashScreen from "./src/screens/SplashScreen";
+import AuthScreen from "./src/screens/AuthScreen";
 import BalanceScreen from "./src/screens/BalanceScreen";
 import ExpenseScreen from "./src/screens/ExpenseScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
@@ -51,15 +51,16 @@ const TabScreens = {
 const Stack = createNativeStackNavigator();
 //const Drawer = createDrawerNavigator();
 
-export default function App() {
+export default function App(navigation) {
   const [expenses, setExpenses] = useState([]);
-  const [theme, setTheme] = useState([lightTheme]);
+  const [theme, setTheme] = useState(lightTheme);
   const [userData, setUserData] = useState([]);
   const [dummyData, setDummyData] = useState(null);
   // let context_data = {
   //   expenses: expenses,
   // };
   //const [isSwitched, setIsSwitched] = useState(false);
+
   useEffect(() => {
     async function fetchTheme() {
       if (dummyData === null) {
@@ -93,18 +94,18 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen
-                name="Splash"
-                component={SplashScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Welcome"
-                component={WelcomeScreen}
+                name="Auth"
+                component={AuthScreen}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="Login"
                 component={LoginScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Welcome"
+                component={WelcomeScreen}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
